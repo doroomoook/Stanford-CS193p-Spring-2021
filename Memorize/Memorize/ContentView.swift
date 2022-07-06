@@ -8,16 +8,53 @@
 import SwiftUI
 
 struct ContentView: View {
-    var emojis = ["🐶", "🔥", "🐥", "🐶"]
+    var emojis = ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐻‍❄️", "🐨", "🐯", "🦁", "🐮", "🐷", "🐽", "🐸", "🐵", "🙈", "🙉", "🙊", "🐒", "🐔", "🐧", "🐦"]
+    @State var emojiCount = 20
+    
     var body: some View {
-        HStack {
-            ForEach(emojis, id: \.self, content: { emoji in
-                CardView(content: emoji)
-            })
+        VStack {
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
+                    ForEach(emojis[0..<emojiCount], id: \.self, content: { emoji in
+                        CardView(content: emoji).aspectRatio(2/3, contentMode: .fit)
+                    })
+                }
+            }
+            .foregroundColor(/*@START_MENU_TOKEN@*/.orange/*@END_MENU_TOKEN@*/)
+            Spacer()
+            HStack {
+                remove
+                Spacer()
+                add
+            }
+            .font(.largeTitle)
+            .padding(.horizontal)
         }
         .padding(.horizontal)
-        .foregroundColor(/*@START_MENU_TOKEN@*/.orange/*@END_MENU_TOKEN@*/)
-            
+    }
+    
+    var remove: some View {
+        Button {
+            if emojiCount > 1 {
+                emojiCount -= 1
+            }
+        } label: {
+            VStack {
+                Image(systemName: "minus.circle")
+            }
+        }
+    }
+    
+    var add: some View {
+        Button {
+            if emojiCount < emojis.count {
+                emojiCount += 1
+            }
+        } label: {
+            VStack {
+                Image(systemName: "plus.circle")
+            }
+        }
     }
 }
 
@@ -30,7 +67,7 @@ struct CardView: View {
             let shape = RoundedRectangle(cornerRadius: 20.0)
             if isFaceUp {
                 shape.fill().foregroundColor(.white)
-                shape.stroke(lineWidth: 3)
+                shape.strokeBorder(lineWidth: 3)
                 Text(content).font(.largeTitle)
                     .font(.largeTitle)
             } else {
@@ -63,6 +100,8 @@ struct ContentView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
         ContentView()
             .preferredColorScheme(.light)
+        ContentView()
+            .previewInterfaceOrientation(.landscapeRight)
             
     }
 }
